@@ -1,0 +1,32 @@
+---
+ip: "192.168.10.10"
+
+folders:
+    - map: ~/code/site
+      to: /vagrant
+
+sites:
+    - map: site.dev
+      to: /vagrant
+
+databases:
+    - name: site
+
+# Apache modules to enable
+#apache-modules:
+#    - rewrite
+
+# PHP modules to install
+#php-modules:
+#    - php7.0-curl
+#    - php7.0-mbstring
+#    - php7.0-zip
+#    - php7.0-gd
+
+# Global Composer packages to install
+#composer-packages:
+#    - laravel/envoy
+
+# Global npm packages to install
+#npm-packages:
+#    - gulp-cli
