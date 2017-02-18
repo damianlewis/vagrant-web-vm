@@ -14,10 +14,15 @@ PHP_MODULES=$1
 
 # Install php 7
 apt update > /dev/null 2>&1
-apt-get install -y php7.0 php-pear libapache2-mod-php7.0 php7.0-mysql > /dev/null 2>&1
+apt-get install -y php7.0 php-pear libapache2-mod-php7.0 php7.0-mysql php7.0-curl php7.0-zip > /dev/null 2>&1
 
 # Install any additional php modules
-apt-get install -y ${PHP_MODULES[@]} > /dev/null 2>&1
+if [ ! $# -eq 0 ]
+then
+    PHP_MODULES=$1
+    echo "Installing additional PHP modules ${PHP_MODULES[@]}"
+    apt-get install -y ${PHP_MODULES[@]} > /dev/null 2>&1
+fi
 
 # Log errors to /var/log/php/error.log
 if grep -cqs ';error_log = php_errors.log' /etc/php/7.0/apache2/php.ini

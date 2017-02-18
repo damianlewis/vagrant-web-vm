@@ -10,12 +10,16 @@ then
     exit 0
 fi
 
-NPM_PACKAGES=$1
-
 # Install node
 apt-get update > /dev/null 2>&1
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -  > /dev/null 2>&1
 apt-get install -y nodejs > /dev/null 2>&1
 
 # Install any global php modules
-npm install ${NPM_PACKAGES[@]} -g  > /dev/null 2>&1
+
+if [ ! $# -eq 0 ]
+then
+    NPM_PACKAGES=$1
+    echo "Installing global npm packages ${NPM_PACKAGES[@]}"
+    npm install ${NPM_PACKAGES[@]} -g > /dev/null 2>&1
+fi

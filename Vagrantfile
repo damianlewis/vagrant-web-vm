@@ -71,14 +71,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing Apache"
         s.path = scriptDir + "/install-apache.sh"
-        s.args = [settings["apache-modules"].join(" ")]
+        if settings.include? 'apache-modules'
+            s.args = [settings["apache-modules"].join(" ")]
+        end
     end
 
     # Install PHP 7
     config.vm.provision "shell" do |s|
         s.name = "Installing PHP 7"
         s.path = scriptDir + "/install-php7.sh"
-        s.args = [settings["php-modules"].join(" ")]
+        if settings.include? 'php-modules'
+            s.args = [settings["php-modules"].join(" ")]
+        end
     end
 
     # Install MySQL
@@ -91,7 +95,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing Composer"
         s.path = scriptDir + "/install-composer.sh"
-        s.args = [settings["composer-packages"].join(" ")]
+        if settings.include? 'composer-packages'
+            s.args = [settings["composer-packages"].join(" ")]
+        end
         s.privileged = false
     end
 
@@ -99,7 +105,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing Node"
         s.path = scriptDir + "/install-node.sh"
-        s.args = [settings["npm-packages"].join(" ")]
+        if settings.include? 'npm-packages'
+            s.args = [settings["npm-packages"].join(" ")]
+        end
     end
 
     # Install all configured sites

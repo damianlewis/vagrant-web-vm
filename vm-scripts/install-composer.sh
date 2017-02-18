@@ -10,8 +10,6 @@ then
     exit 0
 fi
 
-COMPOSER_PACKAGES=$1
-
 # Install Composer https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
 EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -41,4 +39,9 @@ then
 fi
 
 # Install any global Composer packages
-composer global require "${COMPOSER_PACKAGES[@]}" > /dev/null 2>&1
+if [ ! $# -eq 0 ]
+then
+    COMPOSER_PACKAGES=$1
+    echo "Installing global composer packages ${COMPOSER_PACKAGES[@]}"
+    composer global require "${COMPOSER_PACKAGES[@]}" > /dev/null 2>&1
+fi
