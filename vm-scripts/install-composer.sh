@@ -42,6 +42,5 @@ fi
 if [ ! $# -eq 0 ]
 then
     COMPOSER_PACKAGES=$1
-    echo "Installing global composer packages ${COMPOSER_PACKAGES[@]}"
     composer global require "${COMPOSER_PACKAGES[@]}" > /dev/null 2>&1
 fi

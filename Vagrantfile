@@ -106,7 +106,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Create all configured sites
     if settings.include? 'sites'
        type = settings["type"] ||= "nginx"
-
        settings["sites"].each do |site|
             config.vm.provision "shell" do |s|
                 s.name = "Creating Site: " + site["map"]
@@ -133,16 +132,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing Composer"
         s.path = scriptDir + "/install-composer.sh"
+        s.privileged = false
+
         if settings.include? 'composer-packages'
             s.args = [settings["composer-packages"].join(" ")]
         end
-        s.privileged = false
     end
 
     # Install Node
     config.vm.provision "shell" do |s|
         s.name = "Installing Node"
         s.path = scriptDir + "/install-node.sh"
+
         if settings.include? 'npm-packages'
             s.args = [settings["npm-packages"].join(" ")]
         end

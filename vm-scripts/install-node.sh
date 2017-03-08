@@ -19,6 +19,5 @@ apt-get install -y nodejs > /dev/null 2>&1
 if [ ! $# -eq 0 ]
 then
     NPM_PACKAGES=$1
-    echo "Installing global npm packages ${NPM_PACKAGES[@]}"
     npm install ${NPM_PACKAGES[@]} -g > /dev/null 2>&1
 fi
