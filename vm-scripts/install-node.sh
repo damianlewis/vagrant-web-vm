@@ -16,7 +16,6 @@ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -  > /dev/null 2>&1
 apt-get install -y nodejs > /dev/null 2>&1
 
 # Install any global php modules
-
 if [ ! $# -eq 0 ]
 then
     NPM_PACKAGES=$1

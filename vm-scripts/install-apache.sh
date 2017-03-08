@@ -10,22 +10,12 @@ then
     exit 0
 fi
 
-# Install Apache
-apt update > /dev/null 2>&1
+apt-get update > /dev/null 2>&1
 apt-get install -y apache2 > /dev/null 2>&1
 
-# PHP uses the prefork module
-# Disable default multi-processing module (MPM) event module and enable prefork module
+# PHP uses the prefork module, so disable default multi-processing module (MPM) event module and enable prefork module
 a2dismod mpm_event > /dev/null 2>&1
 a2enmod mpm_prefork > /dev/null 2>&1
-
-# Enable any additional apache modules
-if [ ! $# -eq 0 ]
-then
-    APACHE_MODULES=$1
-    echo "Enabling apache modules ${APACHE_MODULES[@]}"
-    a2enmod ${APACHE_MODULES[@]} > /dev/null 2>&1
-fi
 
 # Run apache as vagrant user
 if grep -cqs 'APACHE_RUN_USER=www-data' /etc/apache2/envvars

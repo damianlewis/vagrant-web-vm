@@ -1,5 +1,8 @@
 ---
 ip: "192.168.10.10"
+#hostname: hostname
+#name: name
+#type: nginx/apache
 
 folders:
     - map: ~/code/site
@@ -12,14 +15,9 @@ sites:
 databases:
     - name: site
 
-# Apache modules to enable
-#apache-modules:
-#    - rewrite
-
-# PHP modules to install
+# Additional PHP modules to install
 #php-modules:
-#    - php7.0-mbstring
-#    - php7.0-gd
+#    - php7.0-curl
 
 # Global Composer packages to install
 #composer-packages:

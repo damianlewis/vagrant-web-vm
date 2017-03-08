@@ -67,21 +67,52 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
     end
 
-    # Install Apache
+    # Install Nginx or Apache
     config.vm.provision "shell" do |s|
-        s.name = "Installing Apache"
-        s.path = scriptDir + "/install-apache.sh"
-        if settings.include? 'apache-modules'
-            s.args = [settings["apache-modules"].join(" ")]
-        end
+        type = settings["type"] ||= "apache"
+        s.name = "Installing #{type.capitalize}"
+        s.path = scriptDir + "/install-#{type}.sh"
     end
 
     # Install PHP 7
+    phpVer = "7.0"
+
     config.vm.provision "shell" do |s|
-        s.name = "Installing PHP 7"
-        s.path = scriptDir + "/install-php7.sh"
+        s.name = "Installing PHP #{phpVer}"
+
+        if (settings["type"] == "nginx")
+            type = "fpm"
+            modules = ["php#{phpVer}-cli", "php#{phpVer}-cgi", "php#{phpVer}-fpm", "php-pear"]
+        else
+            type =  "apache2"
+            modules = ["php#{phpVer}", "php-pear", "libapache2-mod-php#{phpVer}"]
+        end
+
         if settings.include? 'php-modules'
-            s.args = [settings["php-modules"].join(" ")]
+            modules = modules | settings["php-modules"]
+        end
+
+        s.args = [type, modules.join(" "), phpVer]
+        s.path = scriptDir + "/install-php7.sh"
+    end
+
+    # Create all configured sites
+    if settings.include? 'sites'
+       type = settings["type"] ||= "apache"
+
+       settings["sites"].each do |site|
+            config.vm.provision "shell" do |s|
+                s.name = "Creating Site: " + site["map"]
+                s.path = scriptDir + "/serve-#{type}.sh"
+                s.args = [site["map"], site["to"]]
+            end
+        end
+    end
+
+    if settings.has_key? 'type' && settings["type"] == "nginx"
+        config.vm.provision "shell" do |s|
+            s.inline = "sudo systemctl restart php$1-fpm"
+            s.args = [phpVer]
         end
     end
 
@@ -89,6 +120,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing MySQL"
         s.path = scriptDir + "/install-mysql.sh"
+    end
+
+    config.vm.provision "shell" do |s|
+        s.inline = "sudo apt-get install -y php$1-mysql"
+        s.args = [phpVer]
     end
 
     # Install Composer
@@ -107,19 +143,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         s.path = scriptDir + "/install-node.sh"
         if settings.include? 'npm-packages'
             s.args = [settings["npm-packages"].join(" ")]
-        end
-    end
-
-    # Install all configured sites
-    if settings.include? 'sites'
-        settings["sites"].each do |site|
-            type = site["type"] ||= "apache"
-
-            config.vm.provision "shell" do |s|
-                s.name = "Creating Site: " + site["map"]
-                s.path = scriptDir + "/serve-#{type}.sh"
-                s.args = [site["map"], site["to"]]
-            end
         end
     end
 

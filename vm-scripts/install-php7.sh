@@ -10,26 +10,17 @@ then
     exit 0
 fi
 
-PHP_MODULES=$1
+PHP_TYPE=$1
+PHP_MODULES=$2
+PHP_VER=$3
 
-# Install php 7
-apt update > /dev/null 2>&1
-apt-get install -y php7.0 php-pear libapache2-mod-php7.0 php7.0-mysql php7.0-curl php7.0-zip > /dev/null 2>&1
-
-# Install any additional php modules
-if [ ! $# -eq 0 ]
-then
-    PHP_MODULES=$1
-    echo "Installing additional PHP modules ${PHP_MODULES[@]}"
-    apt-get install -y ${PHP_MODULES[@]} > /dev/null 2>&1
-fi
+apt-get update > /dev/null 2>&1
+apt-get install -y ${PHP_MODULES[@]}
 
 # Log errors to /var/log/php/error.log
-if grep -cqs ';error_log = php_errors.log' /etc/php/7.0/apache2/php.ini
+if grep -cqs ';error_log = php_errors.log' /etc/php/${PHP_VER}/${PHP_TYPE}/php.ini
 then
     mkdir /var/log/php
     chown www-data /var/log/php
-    sed -i 's/;error_log = php_errors.log/error_log = \/var\/log\/php\/error.log/' /etc/php/7.0/apache2/php.ini
+    sed -i 's/;error_log = php_errors.log/error_log = \/var\/log\/php\/error.log/' /etc/php/${PHP_VER}/${PHP_TYPE}/php.ini
 fi
-
-systemctl restart apache2 > /dev/null 2>&1
