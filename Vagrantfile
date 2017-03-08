@@ -92,8 +92,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             modules = modules | settings["php-modules"]
         end
 
-        s.args = [type, modules.join(" "), phpVer]
         s.path = scriptDir + "/install-php7.sh"
+        s.args = [type, modules.join(" "), phpVer]
     end
 
     # Create all configured sites
