@@ -4,7 +4,7 @@
 composer -v > /dev/null 2>&1
 COMPOSER_IS_INSTALLED=$?
 
-if [ $COMPOSER_IS_INSTALLED -eq 0 ]
+if [ ${COMPOSER_IS_INSTALLED} -eq 0 ]
 then
     echo "Composer already installed"
     exit 0

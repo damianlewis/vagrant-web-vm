@@ -1,8 +1,5 @@
 ---
 ip: "192.168.10.10"
-#hostname: hostname
-#name: name
-#type: nginx/apache
 
 folders:
     - map: ~/code/site

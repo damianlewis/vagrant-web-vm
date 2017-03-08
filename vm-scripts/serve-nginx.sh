@@ -26,4 +26,3 @@ echo "$block" > "/etc/nginx/sites-available/$HOST"
 
 ln -fs "/etc/nginx/sites-available/$HOST" "/etc/nginx/sites-enabled/$HOST"
 rm /etc/nginx/sites-enabled/default
-systemctl restart nginx > /dev/null 2>&1

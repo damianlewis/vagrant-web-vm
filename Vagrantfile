@@ -69,7 +69,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Install Nginx or Apache
     config.vm.provision "shell" do |s|
-        type = settings["type"] ||= "apache"
+        type = settings["type"] ||= "nginx"
         s.name = "Installing #{type.capitalize}"
         s.path = scriptDir + "/install-#{type}.sh"
     end
@@ -80,12 +80,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provision "shell" do |s|
         s.name = "Installing PHP #{phpVer}"
 
-        if (settings["type"] == "nginx")
-            type = "fpm"
-            modules = ["php#{phpVer}-cli", "php#{phpVer}-cgi", "php#{phpVer}-fpm", "php-pear"]
-        else
+        if (settings["type"] == "apache")
             type =  "apache2"
             modules = ["php#{phpVer}", "php-pear", "libapache2-mod-php#{phpVer}"]
+        else
+            type = "fpm"
+            modules = ["php#{phpVer}-cli", "php#{phpVer}-cgi", "php#{phpVer}-fpm", "php-pear"]
         end
 
         if settings.include? 'php-modules'
@@ -96,35 +96,37 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         s.args = [type, modules.join(" "), phpVer]
     end
 
+    # Install MySQL
+    config.vm.provision "shell" do |s|
+        s.name = "Installing MySQL"
+        s.path = scriptDir + "/install-mysql.sh"
+        s.args = [phpVer]
+    end
+
     # Create all configured sites
     if settings.include? 'sites'
-       type = settings["type"] ||= "apache"
+       type = settings["type"] ||= "nginx"
 
        settings["sites"].each do |site|
             config.vm.provision "shell" do |s|
                 s.name = "Creating Site: " + site["map"]
                 s.path = scriptDir + "/serve-#{type}.sh"
-                s.args = [site["map"], site["to"]]
+                s.args = [site["map"], site["to"], phpVer]
             end
         end
     end
 
-    if settings.has_key? 'type' && settings["type"] == "nginx"
-        config.vm.provision "shell" do |s|
-            s.inline = "sudo systemctl restart php$1-fpm"
+    # Restart web server
+    config.vm.provision "shell" do |s|
+        type = settings["type"] ||= "nginx"
+        s.name = "Restarting #{type.capitalize}"
+
+        if (type == "apache")
+            s.inline = "sudo systemctl restart apache2"
+        else
+            s.inline = "sudo systemctl restart nginx php$1-fpm"
             s.args = [phpVer]
         end
-    end
-
-    # Install MySQL
-    config.vm.provision "shell" do |s|
-        s.name = "Installing MySQL"
-        s.path = scriptDir + "/install-mysql.sh"
-    end
-
-    config.vm.provision "shell" do |s|
-        s.inline = "sudo apt-get install -y php$1-mysql"
-        s.args = [phpVer]
     end
 
     # Install Composer

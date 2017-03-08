@@ -4,7 +4,7 @@
 php -v > /dev/null 2>&1
 PHP_IS_INSTALLED=$?
 
-if [ $PHP_IS_INSTALLED -eq 0 ]
+if [ ${PHP_IS_INSTALLED} -eq 0 ]
 then
     echo "PHP already installed"
     exit 0
@@ -15,7 +15,7 @@ PHP_MODULES=$2
 PHP_VER=$3
 
 apt-get update > /dev/null 2>&1
-apt-get install -y ${PHP_MODULES[@]}
+apt-get install -y ${PHP_MODULES[@]}> /dev/null 2>&1
 
 # Log errors to /var/log/php/error.log
 if grep -cqs ';error_log = php_errors.log' /etc/php/${PHP_VER}/${PHP_TYPE}/php.ini

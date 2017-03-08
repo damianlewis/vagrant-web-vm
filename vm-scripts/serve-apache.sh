@@ -18,6 +18,5 @@ block="<VirtualHost *:80>
 
 echo "$block" > "/etc/apache2/sites-available/$HOST.conf"
 
-a2ensite $HOST.conf > /dev/null 2>&1
+a2ensite ${HOST}.conf > /dev/null 2>&1
 a2dissite 000-default > /dev/null 2>&1
-systemctl restart apache2 > /dev/null 2>&1

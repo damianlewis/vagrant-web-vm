@@ -4,7 +4,7 @@
 node -v > /dev/null 2>&1
 NODE_IS_INSTALLED=$?
 
-if [ $NODE_IS_INSTALLED -eq 0 ]
+if [ ${NODE_IS_INSTALLED} -eq 0 ]
 then
     echo "Node already installed"
     exit 0

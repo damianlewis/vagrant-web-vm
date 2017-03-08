@@ -4,7 +4,7 @@
 apache2 -v > /dev/null 2>&1
 APACHE_IS_INSTALLED=$?
 
-if [ $APACHE_IS_INSTALLED -eq 0 ]
+if [ ${APACHE_IS_INSTALLED} -eq 0 ]
 then
     echo "Apache already installed"
     exit 0
