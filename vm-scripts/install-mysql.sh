@@ -10,8 +10,6 @@ then
     exit 0
 fi
 
-PHP_VER=$1
-
 apt-get update > /dev/null 2>&1
 
 # Install MySQL without password prompt
@@ -19,4 +17,4 @@ apt-get update > /dev/null 2>&1
 debconf-set-selections <<< "mysql-server mysql-server/root_password password secret"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password secret"
 
-apt-get install -y mysql-server php${PHP_VER}-mysql > /dev/null 2>&1
+apt-get install -y mysql-server > /dev/null 2>&1

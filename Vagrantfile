@@ -74,33 +74,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         s.path = scriptDir + "/install-#{type}.sh"
     end
 
-    # Install PHP 7
+    # Default PHP version
     phpVer = "7.0"
 
+    # Install PHP 7
     config.vm.provision "shell" do |s|
-        s.name = "Installing PHP #{phpVer}"
-
-        if (settings["type"] == "apache")
-            type =  "apache2"
-            modules = ["php#{phpVer}", "php-pear", "libapache2-mod-php#{phpVer}"]
-        else
-            type = "fpm"
-            modules = ["php#{phpVer}-cli", "php#{phpVer}-cgi", "php#{phpVer}-fpm", "php-pear"]
-        end
+        modules = ["php#{phpVer}-fpm", "php#{phpVer}-mysql"]
 
         if settings.include? 'php-modules'
             modules = modules | settings["php-modules"]
         end
 
+        s.name = "Installing PHP #{phpVer}"
         s.path = scriptDir + "/install-php7.sh"
-        s.args = [type, modules.join(" "), phpVer]
+        s.args = [modules.join(" "), phpVer]
     end
 
     # Install MySQL
     config.vm.provision "shell" do |s|
         s.name = "Installing MySQL"
         s.path = scriptDir + "/install-mysql.sh"
-        s.args = [phpVer]
     end
 
     # Create all configured sites
@@ -112,19 +105,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 s.path = scriptDir + "/serve-#{type}.sh"
                 s.args = [site["map"], site["to"], phpVer]
             end
-        end
-    end
-
-    # Restart web server
-    config.vm.provision "shell" do |s|
-        type = settings["type"] ||= "nginx"
-        s.name = "Restarting #{type.capitalize}"
-
-        if (type == "apache")
-            s.inline = "sudo systemctl restart apache2"
-        else
-            s.inline = "sudo systemctl restart nginx php$1-fpm"
-            s.args = [phpVer]
         end
     end
 

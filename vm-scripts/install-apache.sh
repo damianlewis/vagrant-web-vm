@@ -13,9 +13,8 @@ fi
 apt-get update > /dev/null 2>&1
 apt-get install -y apache2 > /dev/null 2>&1
 
-# PHP uses the prefork module, so disable default multi-processing module (MPM) event module and enable prefork module
-a2dismod mpm_event > /dev/null 2>&1
-a2enmod mpm_prefork > /dev/null 2>&1
+# Enable Fast CGI for use with PHP-FPM
+a2enmod proxy proxy_fcgi > /dev/null 2>&1
 
 # Run apache as vagrant user
 if grep -cqs 'APACHE_RUN_USER=www-data' /etc/apache2/envvars
