@@ -24,7 +24,7 @@ block="server {
     error_log  /var/log/nginx/$HOST/error.log error;
 
     location ~ \.php$ {
-        fastcgi_split_path_info ^(.+?\.php)(/.*)$;;
+        fastcgi_split_path_info ^(.+?\.php)(/.*)$;
         fastcgi_pass unix:/run/php/php$PHP_VER-fpm.sock;
         fastcgi_index index.php;
         include fastcgi_params;
