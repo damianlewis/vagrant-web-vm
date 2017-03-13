@@ -8,20 +8,24 @@ mkdir -p /var/log/nginx/${HOST}
 
 block="server {
     listen 80 default_server;
-    listen [::]:80 default_server;
-
+    server_name $HOST www.$HOST;
     root $ROOT;
 
+    charset utf-8;
     index index.html index.htm index.php;
 
-    server_name $HOST www.$HOST;
+    access_log off;
+    error_log  /var/log/nginx/$HOST/error.log error;
+
+    sendfile off;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
 
     location / {
         try_files \$uri \$uri/ /index.php\$is_args\$args;
     }
 
-    access_log off;
-    error_log  /var/log/nginx/$HOST/error.log error;
 
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+?\.php)(/.*)$;
@@ -29,6 +33,10 @@ block="server {
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+    }
+
+    location ~ /\.ht {
+        deny all;
     }
 }"
 
