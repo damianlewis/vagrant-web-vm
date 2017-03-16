@@ -13,7 +13,7 @@ fi
 apt-get update > /dev/null 2>&1
 
 # Install MySQL without password prompt
-# Set username and password to 'root'
+# Set root password to 'secret'
 debconf-set-selections <<< "mysql-server mysql-server/root_password password secret"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password secret"
 
