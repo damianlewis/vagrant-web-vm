@@ -4,7 +4,7 @@
 nginx -v > /dev/null 2>&1
 NGINX_IS_INSTALLED=$?
 
-if [ ${NGINX_IS_INSTALLED} -eq 0 ]
+if [[ ${NGINX_IS_INSTALLED} -eq 0 ]]
 then
     echo "Nginx already installed"
     exit 0

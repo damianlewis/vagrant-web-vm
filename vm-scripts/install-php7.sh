@@ -4,7 +4,7 @@
 php -v > /dev/null 2>&1
 PHP_IS_INSTALLED=$?
 
-if [ ${PHP_IS_INSTALLED} -eq 0 ]
+if [[ ${PHP_IS_INSTALLED} -eq 0 ]]
 then
     echo "PHP already installed"
     exit 0

@@ -4,7 +4,7 @@
 mysql --version > /dev/null 2>&1
 MYSQL_IS_INSTALLED=$?
 
-if [ ${MYSQL_IS_INSTALLED} -eq 0 ]
+if [[ ${MYSQL_IS_INSTALLED} -eq 0 ]]
 then
     echo "MySQL already installed"
     exit 0

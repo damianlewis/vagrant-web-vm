@@ -4,6 +4,12 @@ HOST=$1
 ROOT=$2
 PHP_VER=$3
 
+if [[ -f "/etc/nginx/sites-available/$HOST" ]]
+then
+    echo "$HOST site already available"
+    exit 0
+fi
+
 mkdir -p /var/log/nginx/${HOST}
 
 block="server {

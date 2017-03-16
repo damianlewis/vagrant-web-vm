@@ -4,6 +4,12 @@ HOST=$1
 ROOT=$2
 PHP_VER=$3
 
+if [[ -f "/etc/apache2/sites-available/$HOST.conf" ]]
+then
+    echo "$HOST site already available"
+    exit 0
+fi
+
 mkdir -p /var/log/apache2/${HOST}
 
 block="<VirtualHost *:80>
