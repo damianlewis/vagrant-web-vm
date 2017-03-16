@@ -17,6 +17,9 @@ PHP_INI="/etc/php/${PHP_VER}/fpm/php.ini"
 apt-get update > /dev/null 2>&1
 apt-get install -y ${PHP_MODULES[@]} > /dev/null 2>&1
 
+# Run php-fpm as vagrant user
+sed -i 's/www-data/vagrant/' /etc/php/${PHP_VER}/fpm/pool.d/www.conf
+
 # Log errors to /var/log/php/error.log
 if grep -cqs ';error_log = php_errors.log' ${PHP_INI}
 then
