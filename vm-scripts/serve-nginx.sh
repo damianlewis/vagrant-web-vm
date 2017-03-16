@@ -26,7 +26,6 @@ block="server {
         try_files \$uri \$uri/ /index.php\$is_args\$args;
     }
 
-
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+?\.php)(/.*)$;
         fastcgi_pass unix:/run/php/php$PHP_VER-fpm.sock;
