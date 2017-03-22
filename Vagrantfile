@@ -125,8 +125,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         s.path = scriptDir + "/install-node.sh"
 
         if settings.include? 'npm-packages'
-            s.args = [settings["npm-packages"].join(" ")]
+            packages = settings["npm-packages"].join(" ")
         end
+
+        s.args = [settings["node-ver"] ||= "7", packages ||= ""]
     end
 
     # Create all the configured databases

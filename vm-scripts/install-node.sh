@@ -10,14 +10,16 @@ then
     exit 0
 fi
 
+NODE_VER=$1
+
 # Install node
 apt-get update > /dev/null 2>&1
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -  > /dev/null 2>&1
-apt-get install -y nodejs > /dev/null 2>&1
+curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | sudo -E bash -  > /dev/null 2>&1
+apt-get install -y nodejs
 
 # Install any global php modules
-if [[ ! $# -eq 0 ]]
+if [[ -n $2 ]]
 then
-    NPM_PACKAGES=$1
-    npm install ${NPM_PACKAGES[@]} -g > /dev/null 2>&1
+    NPM_PACKAGES=$2
+    npm install ${NPM_PACKAGES[@]} -g
 fi
