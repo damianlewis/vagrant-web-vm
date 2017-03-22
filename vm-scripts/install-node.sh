@@ -15,11 +15,11 @@ NODE_VER=$1
 # Install node
 apt-get update > /dev/null 2>&1
 curl -sL https://deb.nodesource.com/setup_${NODE_VER}.x | sudo -E bash -  > /dev/null 2>&1
-apt-get install -y nodejs
+apt-get install -y nodejs > /dev/null 2>&1
 
 # Install any global php modules
 if [[ -n $2 ]]
 then
     NPM_PACKAGES=$2
-    npm install ${NPM_PACKAGES[@]} -g
+    npm install ${NPM_PACKAGES[@]} -g > /dev/null 2>&1
 fi
