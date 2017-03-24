@@ -3,16 +3,17 @@
 
 require 'yaml'
 
-VAGRANTFILE_API_VERSION ||= "2"
 settings = YAML::load(File.read("vm.yaml"))
-afterScriptPath = "after.sh"
-aliasesPath = "aliases"
-scriptDir = File.expand_path("vm-scripts", File.dirname(__FILE__))
+after_script_path = "after.sh"
+aliases_path = "aliases"
+script_dir = File.expand_path("vm-scripts", File.dirname(__FILE__))
+type = settings["type"] ||= "lemp"
+php_ver = settings["php-ver"] ||= "7.0"
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure("2") do |config|
     # Create bash aliases
-    if File.exists? aliasesPath then
-        config.vm.provision "file", source: aliasesPath, destination: "~/.bash_aliases"
+    if File.exists? aliases_path then
+        config.vm.provision "file", source: aliases_path, destination: "~/.bash_aliases"
     end
 
     # Prevent TTY errors
@@ -23,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Configure the vagrant box
     config.vm.define settings["name"] ||= "damianlewis"
-    config.vm.box = settings["box"] ||= "bento/ubuntu-16.04"
+    config.vm.box = settings["box"] ||= "damianlewis/#{type}-php#{php_ver}"
     config.vm.network :private_network, ip: settings["ip"] ||= "192.168.10.10"
     config.vm.hostname = settings["hostname"] ||= "damianlewis"
 
@@ -39,8 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     default_ports = {
         80   => 8000,
         443  => 44300,
-        3306 => 33060,
-        5432 => 54320
+        3306 => 33060
     }
 
     # Use default port forwarding unless overridden
@@ -67,83 +67,36 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         end
     end
 
-    # Install Nginx or Apache
-    config.vm.provision "shell" do |s|
-        type = settings["type"] ||= "nginx"
-        s.name = "Installing #{type.capitalize}"
-        s.path = scriptDir + "/install-#{type}.sh"
-    end
-
-    # Default PHP version
-    phpVer = "7.0"
-
-    # Install PHP 7
-    config.vm.provision "shell" do |s|
-        modules = ["php#{phpVer}-fpm", "php#{phpVer}-mysql"]
-
-        if settings.include? 'php-modules'
-            modules = modules | settings["php-modules"]
-        end
-
-        s.name = "Installing PHP #{phpVer}"
-        s.path = scriptDir + "/install-php7.sh"
-        s.args = [modules.join(" "), phpVer]
-    end
-
-    # Install MySQL
-    config.vm.provision "shell" do |s|
-        s.name = "Installing MySQL"
-        s.path = scriptDir + "/install-mysql.sh"
-    end
-
     # Create all configured sites
     if settings.include? 'sites'
-       type = settings["type"] ||= "nginx"
-       settings["sites"].each do |site|
+        if (type == "lamp")
+            server = "apache"
+        else
+            server = "nginx"
+        end
+
+        settings["sites"].each do |site|
             config.vm.provision "shell" do |s|
                 s.name = "Creating Site: " + site["map"]
-                s.path = scriptDir + "/serve-#{type}.sh"
-                s.args = [site["map"], site["to"], phpVer]
+                s.path = script_dir + "/serve-#{server}.sh"
+                s.args = [site["map"], site["to"], php_ver]
             end
         end
-    end
-
-    # Install Composer
-    config.vm.provision "shell" do |s|
-        s.name = "Installing Composer"
-        s.path = scriptDir + "/install-composer.sh"
-        s.privileged = false
-
-        if settings.include? 'composer-packages'
-            s.args = [settings["composer-packages"].join(" ")]
-        end
-    end
-
-    # Install Node
-    config.vm.provision "shell" do |s|
-        s.name = "Installing Node"
-        s.path = scriptDir + "/install-node.sh"
-
-        if settings.include? 'npm-packages'
-            packages = settings["npm-packages"].join(" ")
-        end
-
-        s.args = [settings["node-ver"] ||= "7", packages ||= ""]
     end
 
     # Create all the configured databases
     if settings.has_key?("databases")
         settings["databases"].each do |db|
             config.vm.provision "shell" do |s|
-                s.name = "Creating MySQL Database: " + db["name"]
-                s.path = scriptDir + "/create-mysql.sh"
-                s.args = [db["name"], db["user"] ||= "damianlewis", db["password"] ||= "secret"]
+                s.name = "Creating MySQL Database: " + db
+                s.path = script_dir + "/create-mysql.sh"
+                s.args = [db, "damianlewis", "secret"]
             end
         end
     end
 
     # Run post provisioning script
-    if File.exists? afterScriptPath then
-        config.vm.provision "shell", path: afterScriptPath
+    if File.exists? after_script_path then
+        config.vm.provision "shell", path: after_script_path
     end
 end

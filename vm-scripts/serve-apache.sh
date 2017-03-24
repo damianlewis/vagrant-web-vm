@@ -1,40 +1,35 @@
 #!/usr/bin/env bash
 
-HOST=$1
-ROOT=$2
-PHP_VER=$3
+www_host=$1
+www_root=$2
 
-if [[ -f "/etc/apache2/sites-available/$HOST.conf" ]]
+if [[ -f "/etc/apache2/sites-available/${www_host}.conf" ]]
 then
-    echo "$HOST site already available"
+    echo "${www_host} site already available"
     exit 0
 fi
 
-mkdir -p /var/log/apache2/${HOST}
+mkdir -p /var/log/apache2/${www_host}
 
 block="<VirtualHost *:80>
-    ServerName $HOST
-    ServerAlias www.$HOST
-    DocumentRoot $ROOT
+    ServerName ${www_host}
+    ServerAlias www.${www_host}
+    DocumentRoot ${www_root}
 
-    <Directory $ROOT>
+    <Directory ${www_root}>
         Options -Indexes +FollowSymLinks +MultiViews
         AllowOverride All
         Require all granted
     </Directory>
 
-    <FilesMatch \.php$>
-        SetHandler \"proxy:unix:/run/php/php$PHP_VER-fpm.sock|fcgi://localhost/\"
-    </FilesMatch>
-
-    ErrorLog \${APACHE_LOG_DIR}/$HOST/error.log
+    ErrorLog \${APACHE_LOG_DIR}/${www_host}/error.log
     # Possible values include: debug, info, notice, warn, error, crit, alert, emerg
     LogLevel warn
-    CustomLog \${APACHE_LOG_DIR}/$HOST/access.log combined
+    CustomLog \${APACHE_LOG_DIR}/${www_host}/access.log combined
 </VirtualHost>"
 
-echo "$block" > "/etc/apache2/sites-available/$HOST.conf"
+echo "${block}" > "/etc/apache2/sites-available/${www_host}.conf"
 
-a2ensite ${HOST}.conf > /dev/null 2>&1
+a2ensite ${www_host}.conf > /dev/null 2>&1
 a2dissite 000-default > /dev/null 2>&1
 systemctl restart apache2 > /dev/null 2>&1

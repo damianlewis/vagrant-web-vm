@@ -10,16 +10,4 @@ sites:
       to: /vagrant
 
 databases:
-    - name: site
-
-# Additional PHP modules to install
-#php-modules:
-#    - php7.0-curl
-
-# Global Composer packages to install
-#composer-packages:
-#    - laravel/envoy
-
-# Global npm packages to install
-#npm-packages:
-#    - gulp-cli
+    - dbname

@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
-HOST=$1
-ROOT=$2
-PHP_VER=$3
+www_host=$1
+www_root=$2
+php_ver=$3
 
-if [[ -f "/etc/nginx/sites-available/$HOST" ]]
+if [[ -f "/etc/nginx/sites-available/${www_host}" ]]
 then
-    echo "$HOST site already available"
+    echo "${www_host} site already available"
     exit 0
 fi
 
-mkdir -p /var/log/nginx/${HOST}
+mkdir -p /var/log/nginx/${www_host}
 
 block="server {
     listen 80 default_server;
-    server_name $HOST www.$HOST;
-    root $ROOT;
+    server_name ${www_host} www.${www_host};
+    root ${www_root};
 
     charset utf-8;
     index index.html index.htm index.php;
 
     access_log off;
-    error_log  /var/log/nginx/$HOST/error.log error;
+    error_log  /var/log/nginx/${www_host}/error.log error;
 
     sendfile off;
 
@@ -34,7 +34,7 @@ block="server {
 
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-        fastcgi_pass unix:/run/php/php$PHP_VER-fpm.sock;
+        fastcgi_pass unix:/run/php/php${php_ver}-fpm.sock;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
@@ -45,8 +45,8 @@ block="server {
     }
 }"
 
-echo "$block" > "/etc/nginx/sites-available/$HOST"
+echo "${block}" > "/etc/nginx/sites-available/${www_host}"
 
-ln -fs "/etc/nginx/sites-available/$HOST" "/etc/nginx/sites-enabled/$HOST"
+ln -fs "/etc/nginx/sites-available/${www_host}" "/etc/nginx/sites-enabled/${www_host}"
 rm /etc/nginx/sites-enabled/default
 systemctl restart nginx > /dev/null 2>&1
