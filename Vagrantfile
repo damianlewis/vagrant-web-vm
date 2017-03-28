@@ -19,7 +19,6 @@ folder = {
 # Default ports for forwarding
 default_ports = {
     80 => 8000,
-    443 => 44300,
     3306 => 33060
 }
 
