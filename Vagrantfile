@@ -63,11 +63,11 @@ Vagrant.configure("2") do |config|
     end
 
     # Create site
-    if settings.has_key?("site")
+    if settings.has_key?("server_name")
         config.vm.provision "shell" do |s|
-            s.name = "Creating Site: " + settings["site"]
+            s.name = "Creating Site: " + settings["server_name"]
             s.path = script_dir + "/serve-#{type == "lamp" ? "apache" : "nginx"}.sh"
-            s.args = [settings["site"], folder["to"], php_ver]
+            s.args = [settings["server_name"], settings["root"] ||= folder["to"], php_ver]
         end
     end
 
