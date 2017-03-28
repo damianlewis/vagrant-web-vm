@@ -12,6 +12,11 @@ ip: "192.168.22.18"
 name: vmname
 hostname: vmhostname
 ```
+To use NFS for your synced folder, add the `nfs` setting.
+```
+ip: "192.168.10.10"
+nfs: true
+```
 ###### Apache
 To use Apache add the following `type` setting:
 ```
@@ -26,7 +31,10 @@ php-ver: "7.1"
 ```
 ###### MySQL
 The default user created for databases is 'damianlewis' with the password 'secret'.
-
+###### Post provisioning
+Use the `post.sh` file to run any further provisions that you require for your VM.
+###### Bash aliases
+A number of default bash aliases are created for the VM. These can be found in the `aliases` file. Add any further aliases you require to this file before creating the VM.
 ##### Other software included
 - Composer (with Laravel Envoy)
 - NVM and Node (with Gulp and Webpack)

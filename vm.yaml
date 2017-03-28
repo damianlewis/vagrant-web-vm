@@ -1,13 +1,6 @@
 ---
 ip: "192.168.10.10"
-
-folders:
-    - map: ~/code/site
-      to: /vagrant
-
-sites:
-    - map: site.dev
-      to: /vagrant
+site: site.dev
 
 databases:
     - dbname
