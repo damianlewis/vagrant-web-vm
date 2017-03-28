@@ -1,6 +1,6 @@
 ---
 ip: "192.168.10.10"
-server_name: site.dev
+site: site.dev
 root: /vagrant
 
 databases:
