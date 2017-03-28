@@ -46,8 +46,8 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
         vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
         vb.customize ["modifyvm", :id, "--ostype", settings["os"] ||= "Ubuntu_64"]
-        vb.customize ["modifyvm", :id, "--natdnshostresolver1", settings["natdnshostresolver"] ||= "on"]
-        vb.customize ["modifyvm", :id, "--natdnsproxy1", settings["natdnsproxy"] ||= "on"]
+        vb.customize ["modifyvm", :id, "--natdnshostresolver1", settings["natdnshostresolver"] ||= "off"]
+        vb.customize ["modifyvm", :id, "--natdnsproxy1", settings["natdnsproxy"] ||= "off"]
     end
 
     # Configure default ports
