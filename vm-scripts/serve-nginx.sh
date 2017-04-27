@@ -49,4 +49,4 @@ echo "${block}" > "/etc/nginx/sites-available/${www_host}"
 
 ln -fs "/etc/nginx/sites-available/${www_host}" "/etc/nginx/sites-enabled/${www_host}"
 rm /etc/nginx/sites-enabled/default
-systemctl restart nginx > /dev/null 2>&1
+systemctl restart nginx

@@ -32,4 +32,4 @@ echo "${block}" > "/etc/apache2/sites-available/${www_host}.conf"
 
 a2ensite ${www_host}.conf > /dev/null 2>&1
 a2dissite 000-default > /dev/null 2>&1
-systemctl restart apache2 > /dev/null 2>&1
+systemctl restart apache2

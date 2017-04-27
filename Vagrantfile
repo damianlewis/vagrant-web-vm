@@ -63,6 +63,15 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder folder["map"], folder["to"]
     end
 
+    # Install Xdebug
+    if settings.has_key?("xdebug") && settings["xdebug"] == true
+        config.vm.provision "shell" do |s|
+            s.name = "Installing Xdebug"
+            s.path = script_dir + "/install-xdebug.sh"
+            s.args = [php_ver]
+        end
+    end
+
     # Create site
     if settings.has_key?("site")
         config.vm.provision "shell" do |s|

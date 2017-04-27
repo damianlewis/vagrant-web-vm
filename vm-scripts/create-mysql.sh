@@ -16,4 +16,4 @@ db_password=$3;
 mysql -e "CREATE DATABASE IF NOT EXISTS \`${db_name}\` DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_unicode_ci";
 mysql -e "GRANT ALL ON \`${db_name}\`.* TO '${db_user}'@'localhost' IDENTIFIED BY '${db_password}';"
 mysql -e "FLUSH PRIVILEGES;"
-systemctl restart mysql > /dev/null 2>&1
+systemctl restart mysql
