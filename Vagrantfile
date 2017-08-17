@@ -58,7 +58,7 @@ Vagrant.configure("2") do |config|
 
     # Configure shared folder
     if settings.has_key?("nfs") && settings["nfs"] == true
-        config.vm.synced_folder folder["map"], folder["to"], type: "nfs", mout_options: ['actimeo=1', 'nolock']
+        config.vm.synced_folder folder["map"], folder["to"], type: "nfs", mount_options: ['actimeo=1', 'nolock']
     else
         config.vm.synced_folder folder["map"], folder["to"]
     end
