@@ -21,7 +21,7 @@ nfs: true
 To use Apache add the following `type` property:
 ```
 ip: "192.168.10.10"
-type: apache
+type: lamp
 ```
 ###### PHP
 To use PHP 7.1 add the following `php-ver` property:
