@@ -10,6 +10,14 @@ script_dir = File.expand_path("vm-scripts", File.dirname(__FILE__))
 type = settings["type"] ||= "lemp"
 php_ver = settings["php-ver"] ||= "7.0"
 
+unless type == "lamp" || type == "lemp"
+    abort("Development stack {type: #{type}} not recognised. Only lamp or lemp are supported.")
+end
+
+unless php_ver == "7.0" || php_ver == "7.1"
+    abort("PHP {php-ver: #{php_ver}} not supported. Only versions 7.0 and 7.1 are supported.")
+end
+
 # Synced folder
 folder = {
     "map" => ".",
@@ -24,7 +32,7 @@ default_ports = {
 
 Vagrant.configure("2") do |config|
     # Create bash aliases
-    if File.exists? aliases then
+    if File.exists? aliases
         config.vm.provision "file", source: aliases, destination: "~/.bash_aliases"
     end
 
@@ -93,7 +101,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Run post provisioning script
-    if File.exists? post_script then
+    if File.exists? post_script
         config.vm.provision "shell", path: post_script
     end
 end
