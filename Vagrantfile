@@ -71,12 +71,37 @@ Vagrant.configure("2") do |config|
         config.vm.synced_folder folder["map"], folder["to"]
     end
 
+    # Install additional PHP extensions/modules
+    if settings.has_key?("extensions") && settings["extensions"].kind_of?(Array)
+        extensions = settings["extensions"]
+        config.vm.provision "shell" do |s|
+            s.name = "Installing additional PHP extensions"
+            s.path = script_dir + "/install-extensions.sh"
+            s.args = extensions
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Restarting PHP"
+            s.inline = "systemctl restart php$1-fpm"
+            s.args = [php_ver]
+       end
+    end
+
     # Install Xdebug
     if settings.has_key?("xdebug") && settings["xdebug"] == true
         config.vm.provision "shell" do |s|
             s.name = "Installing Xdebug"
             s.path = script_dir + "/install-xdebug.sh"
             s.args = [php_ver]
+        end
+    end
+
+    # Install Laravel Envoy
+    if settings.has_key?("envoy") && settings["envoy"] == true
+        config.vm.provision "shell" do |s|
+            s.name = "Installing Laravel Envoy"
+            s.path = script_dir + "/install-envoy.sh"
+            s.privileged = false
         end
     end
 
@@ -90,7 +115,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Create all the configured databases
-    if settings.has_key?("databases")
+    if settings.has_key?("databases") && settings["databases"].kind_of?(Array)
         settings["databases"].each do |db|
             config.vm.provision "shell" do |s|
                 s.name = "Creating MySQL Database: " + db
