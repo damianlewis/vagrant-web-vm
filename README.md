@@ -65,17 +65,19 @@ Use the `post.sh` file to run any further provisions that you require for your V
 ###### Bash aliases
 A number of default bash aliases are created for the VM. These can be found in the `aliases` file. Add any further aliases you require to this file before creating the VM.
 #### Software included
-- Ubuntu 16.04.2 LTS
-- Nginx 1.10.0 _or_ Apache 2.4.18
-- PHP 7.0.15 _or_ 7.1.3 with the following modules and extensions:
+- Ubuntu 16.04.3 LTS
+- Nginx 1.10.3 _or_ Apache 2.4.18
+- PHP 7.0.22 _or_ 7.1.9 with the following modules and extensions:
     - curl
     - mysql
     - gd
     - mbstring
     - xml
     - zip
-- MySQL 5.7.17
-- Composer 1.4.1
-- NVM with Node 7.7.4 and the following global packages:
-    - Gulp 1.2.2
-    - Webpack 2.3.1
+- MySQL 5.7.19
+- Composer 1.5.1
+- NVM with Node 8.4.0 and the following global packages:
+    - Bower 1.8.0
+    - Grunt 1.2.0
+    - Gulp 1.4.0
+    - Yarn 0.27.5
