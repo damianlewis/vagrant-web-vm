@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
     # Configure the vagrant box
     config.vm.define settings["name"] ||= "damianlewis"
     config.vm.box = settings["box"] ||= "damianlewis/#{type}-php#{php_ver}"
-    config.vm.box_version = settings["version"] ||= ">= 1.0.0"
+    config.vm.box_version = settings["version"] ||= ">= 1.1.0"
     config.vm.network "private_network", ip: settings["ip"] ||= "192.168.10.10"
     config.vm.hostname = settings["hostname"] ||= "damianlewis"
 
