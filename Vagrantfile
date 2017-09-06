@@ -7,14 +7,16 @@ settings = YAML::load(File.read("vm.yaml"))
 post_script = "post.sh"
 aliases = "aliases"
 script_dir = File.expand_path("vm-scripts", File.dirname(__FILE__))
+supported_types = ["lamp", "lemp"]
+supported_php = ["7.0", "7.1"]
 type = settings["type"] ||= "lemp"
 php_ver = settings["php-ver"] ||= "7.0"
 
-unless type == "lamp" || type == "lemp"
+unless supported_types.include?(type)
     abort("Development stack {type: #{type}} not recognised. Only lamp or lemp are supported.")
 end
 
-unless php_ver == "7.0" || php_ver == "7.1"
+unless supported_php.include?(php_ver)
     abort("PHP {php-ver: #{php_ver}} not supported. Only versions 7.0 and 7.1 are supported.")
 end
 
