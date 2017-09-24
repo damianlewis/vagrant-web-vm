@@ -37,7 +37,6 @@ xdebug.remote_connect_back=1
 xdebug.remote_port=9000"
 
 echo "${block}" > ${xdebug_path}
-ln -sf ${xdebug_path} ${php_path}/fpm/conf.d/20-xdebug.ini
-ln -sf ${xdebug_path} ${php_path}/cli/conf.d/20-xdebug.ini
+phpenmod xdebug
 
 systemctl restart php${php_ver}-fpm
