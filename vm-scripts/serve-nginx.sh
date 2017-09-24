@@ -12,7 +12,8 @@ fi
 
 mkdir -p /var/log/nginx/${www_host}
 
-block="server {
+block="# ${www_host} configuration
+server {
     listen 80 default_server;
     server_name ${www_host} www.${www_host};
     root ${www_root};

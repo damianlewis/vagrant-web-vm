@@ -11,7 +11,8 @@ fi
 
 mkdir -p /var/log/apache2/${www_host}
 
-block="<VirtualHost *:80>
+block="# ${www_host} configuration
+<VirtualHost *:80>
     ServerName ${www_host}
     ServerAlias www.${www_host}
     DocumentRoot ${www_root}
