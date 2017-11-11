@@ -1,3 +1,5 @@
+**This development environment has been replaced with [DevBox](https://github.com/damianlewis/devbox), an improved PHP development environment for Vagrant.**
+
 # LEMP/LAMP development VM
 
 ## Description
